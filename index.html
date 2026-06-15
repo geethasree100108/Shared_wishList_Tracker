@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Budget & Wishlist Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="app-header">
+            <h1>📊 Smart Budget & Wishlist Tracker</h1>
+            <p>Collaborative Vanilla JS Project</p>
+        </header>
+
+        <main class="app-grid">
+            <div class="control-panel">
+                <section class="card">
+                    <h2>1. Setup Total Budget</h2>
+                    <form id="budget-form">
+                        <div class="input-group">
+                            <span class="currency-addon">$</span>
+                            <input type="number" id="budget-input" placeholder="Enter amount (e.g., 1200)" required min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Set Budget</button>
+                    </form>
+                </section>
+
+                <section class="card metrics-card">
+                    <div class="metric">
+                        <span class="metric-label">Total Budget</span>
+                        <span class="metric-value" id="display-total">$0</span>
+                    </div>
+                    <div class="metric-divider"></div>
+                    <div class="metric">
+                        <span class="metric-label">Remaining Balance</span>
+                        <span class="metric-value" id="display-remaining">$0</span>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>2. Add Wishlist Item</h2>
+                    <form id="item-form">
+                        <div class="form-group">
+                            <label for="item-name">Item Name</label>
+                            <input type="text" id="item-name" placeholder="e.g., Mechanical Keyboard" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-price">Estimated Price</label>
+                            <div class="input-group">
+                                <span class="currency-addon">$</span>
+                                <input type="number" id="item-price" placeholder="0" required min="1">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Add To Wishlist</button>
+                    </form>
+                </section>
+            </div>
+
+            <div class="display-panel">
+                <section class="card list-card">
+                    <h2>3. Target Wishlist (Chronological Priority)</h2>
+                    <div class="list-legend">
+                        <span class="badge badge-affordable">Affordable</span>
+                        <span class="badge badge-expensive">Over Budget</span>
+                    </div>
+                    <ul id="wishlist-container" class="wishlist-ul">
+                        <p class="empty-state">No items added to your wishlist yet.</p>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="logic.js"></script>
+    <script src="ui.js"></script>
+</body>
+</html>
