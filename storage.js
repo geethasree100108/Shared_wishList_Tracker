@@ -1,38 +1,67 @@
-// ==========================================================================
-// STORAGE CONTROLLER
-// ==========================================================================
 
-const STORAGE_KEYS = {
-    BUDGET: 'smart_budget_total',
-    ITEMS: 'smart_budget_items'
-};
-
-const StorageController = {
-    // Save the total budget number
-    saveBudget(budget) {
-        localStorage.setItem(STORAGE_KEYS.BUDGET, JSON.stringify(Number(budget)));
+const LocalStorageManager = {
+    KEYS: {
+        BUDGET: 'smart_budget_total',
+        WISHLIST: 'smart_budget_wishlist'
     },
 
-    // Retrieve the total budget number
-    getBudget() {
-        const saved = localStorage.getItem(STORAGE_KEYS.BUDGET);
+    saveBudget(budget) {
+        localStorage.setItem(this.KEYS.BUDGET, JSON.stringify(Number(budget)));
+    },
+
+    loadBudget() {
+        const saved = localStorage.getItem(this.KEYS.BUDGET);
         return saved ? JSON.parse(saved) : 0;
     },
 
-    // Save the array of wishlist items
-    saveItems(items) {
-        localStorage.setItem(STORAGE_KEYS.ITEMS, JSON.stringify(items));
+    saveWishlist(items) {
+        localStorage.setItem(this.KEYS.WISHLIST, JSON.stringify(items));
     },
 
-    // Retrieve the array of wishlist items
-    getItems() {
-        const saved = localStorage.getItem(STORAGE_KEYS.ITEMS);
+    loadWishlist() {
+        const saved = localStorage.getItem(this.KEYS.WISHLIST);
         return saved ? JSON.parse(saved) : [];
+    }
+};
+
+window.AppState = {
+    totalBudget: 0,
+    wishlist: [],
+
+    init() {
+        this.totalBudget = LocalStorageManager.loadBudget();
+        this.wishlist = LocalStorageManager.loadWishlist();
     },
 
-    // Wipe storage values if needed
-    clearAll() {
-        localStorage.removeItem(STORAGE_KEYS.BUDGET);
-        localStorage.removeItem(STORAGE_KEYS.ITEMS);
+    setTotalBudget(amount) {
+        const parsedAmount = Math.max(0, Number(amount));
+        this.totalBudget = parsedAmount;
+        LocalStorageManager.saveBudget(parsedAmount);
+    },
+
+    addWishlistItem(name, price) {
+        const newItem = {
+            id: Date.now().toString(), // Reliable, chronological string ID
+            name: name.trim(),
+            price: Math.max(1, Number(price))
+        };
+        this.wishlist.push(newItem);
+        LocalStorageManager.saveWishlist(this.wishlist);
+    },
+
+    removeItem(id) {
+        this.wishlist = this.wishlist.filter(item => item.id !== id);
+        LocalStorageManager.saveWishlist(this.wishlist);
+    },
+
+    calculateMetrics() {
+        if (typeof calculateMetricsLogic === 'function') {
+            return calculateMetricsLogic(this.totalBudget, this.wishlist);
+        }
+        
+        return {
+            remainingBalance: this.totalBudget,
+            evaluatedItems: this.wishlist.map(item => ({ ...item, status: 'affordable' }))
+        };
     }
 };
